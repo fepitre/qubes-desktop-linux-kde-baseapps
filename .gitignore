@@ -1,0 +1,4 @@
+rpm/
+srpm/
+pkgs/
+*.tar.xz
