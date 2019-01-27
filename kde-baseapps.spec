@@ -6,7 +6,7 @@
 %endif
 
 # enable tests
-%global tests 1
+%global tests 0
 
 Name:    kde-baseapps
 Summary: KDE Core Applications 
