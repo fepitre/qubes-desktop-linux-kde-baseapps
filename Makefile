@@ -1,6 +1,22 @@
-NAME := kde-baseapps
-SPECFILE = $(firstword $(wildcard *.spec))
+VERSION := $(shell cat version)
 
-MAKEFILE_COMMON := Makefile.common
+SRC_FILE := kde-baseapps-$(VERSION).tar.xz
 
-include $(MAKEFILE_COMMON)
+DISTFILES_MIRROR ?= https://ftp.qubes-os.org/distfiles/
+UNTRUSTED_SUFF := .UNTRUSTED
+FETCH_CMD := wget --no-use-server-timestamps -q -O
+
+SHELL := /bin/bash
+
+%: %.sha512
+	@$(FETCH_CMD) $@$(UNTRUSTED_SUFF) $(DISTFILES_MIRROR)$@
+	@sha512sum --status -c <(printf "$$(cat $<)  -\n") <$@$(UNTRUSTED_SUFF) || \
+			{ echo "Wrong SHA512 checksum on $@$(UNTRUSTED_SUFF)!"; exit 1; }
+	@mv $@$(UNTRUSTED_SUFF) $@
+
+.PHONY: get-sources
+get-sources: $(SRC_FILE)
+
+.PHONY: verify-sources
+verify-sources:
+	@true
